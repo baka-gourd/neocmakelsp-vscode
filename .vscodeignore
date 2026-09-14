@@ -6,6 +6,7 @@
 !syntaxes/*.json
 !README.md
 !LICENSE
+!THIRD_PARTY_NOTICES.md
 !dist/extension.cjs
 !python/convert_hover.py
 !python/requirements.txt

@@ -8,5 +8,22 @@
   "configuration.trace.description": "Record LSP logs",
   "configuration.trace.off": "Off",
   "configuration.trace.messages": "Message",
-  "configuration.trace.verbose": "Verbose"
+  "configuration.trace.verbose": "Verbose",
+  "configuration.lsp_snippets.description": "Enable language-server completion snippets. Restarts the server when changed.",
+  "configuration.debug.description": "Show CMake debugging commands. Requires CMake 3.27+ with debugger support.",
+  "configuration.buildDirectory.description": "CMake build directory, relative to the workspace or absolute. Defaults to `build`.",
+  "view.targets.title": "CMake Targets",
+  "view.targets.empty": "No targets available. Configure the project with CMake File API codemodel data, then refresh. Requires neocmakelsp with `neocmake/cmake_targets` support.",
+  "command.cmakeTargets.title": "neocmakelsp: Refresh CMake Targets",
+  "command.cmakeTargets.refreshEntry.title": "Refresh",
+  "command.cmakeTargets.build.title": "Build Target",
+  "command.cmakeTargets.run.title": "Run Target",
+  "command.runScriptDebugger.title": "neocmakelsp: Debug Current CMake Script",
+  "command.runConfigureDebugger.title": "neocmakelsp: Debug CMake Configure",
+  "debug.mode": "Debug a configure operation or script.",
+  "debug.script": "Path to the CMake script.",
+  "debug.pipe": "Optional debugger named pipe or Unix socket path.",
+  "debug.cwd": "Working/source directory.",
+  "debug.args": "Additional CMake command-line arguments.",
+  "debug.env": "Additional environment variables for CMake."
 }

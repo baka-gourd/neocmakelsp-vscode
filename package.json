@@ -19,9 +19,6 @@
   "type": "module",
   "main": "./dist/extension.cjs",
   "scripts": {
-    "test:python-env": "esbuild src/python-environment.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/python-environment-test.cjs && node test/python-environment.test.cjs",
-    "test:logs": "esbuild src/server-log.ts --bundle --platform=node --format=esm --outfile=dist/server-log-test.mjs && node test/server-log.test.mjs",
-    "test:server": "node test/server-smoke.mjs",
     "check": "tsc --noEmit",
     "build": "pnpm check && esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.cjs",
     "vscode:prepublish": "pnpm build",
@@ -56,6 +53,15 @@
           "CMakeLists.txt"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "cmake-cache",
+        "filenames": [
+          "CMakeCache.txt"
+        ],
+        "aliases": [
+          "CMake Cache"
+        ]
       }
     ],
     "configurationDefaults": {
@@ -68,12 +74,47 @@
         "language": "cmake",
         "scopeName": "source.cmake",
         "path": "./syntaxes/cmake.tmLanguage.json"
+      },
+      {
+        "language": "cmake-cache",
+        "scopeName": "source.cmakecache",
+        "path": "./syntaxes/cmake-cache.tmLanguage.json"
       }
     ],
     "commands": [
       {
         "command": "neocmakelsp.restart",
         "title": "%command.restart.title%"
+      },
+      {
+        "command": "neocmakelsp.cmakeTargets",
+        "title": "%command.cmakeTargets.title%",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "neocmakelsp.cmakeTargets.refreshEntry",
+        "title": "%command.cmakeTargets.refreshEntry.title%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "neocmakelsp.cmakeTargets.build",
+        "title": "%command.cmakeTargets.build.title%",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "neocmakelsp.cmakeTargets.run",
+        "title": "%command.cmakeTargets.run.title%",
+        "icon": "$(run)"
+      },
+      {
+        "command": "neocmakelsp.runScriptDebugger",
+        "title": "%command.runScriptDebugger.title%",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "neocmakelsp.runConfigureDebugger",
+        "title": "%command.runConfigureDebugger.title%",
+        "icon": "$(debug-alt)"
       }
     ],
     "configuration": {
@@ -117,9 +158,173 @@
             "%configuration.trace.messages%",
             "%configuration.trace.verbose%"
           ]
+        },
+        "neocmakelsp.lsp_snippets": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "%configuration.lsp_snippets.description%"
+        },
+        "neocmakelsp.debug": {
+          "type": "boolean",
+          "default": false,
+          "scope": "window",
+          "markdownDescription": "%configuration.debug.description%"
+        },
+        "neocmakelsp.buildDirectory": {
+          "type": "string",
+          "default": "build",
+          "scope": "window",
+          "markdownDescription": "%configuration.buildDirectory.description%"
         }
       }
-    }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "neocmakelsp.cmakeTargets",
+          "name": "%view.targets.title%"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "neocmakelsp.cmakeTargets",
+        "contents": "%view.targets.empty%"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "neocmakelsp.cmakeTargets.run",
+          "when": "false"
+        },
+        {
+          "command": "neocmakelsp.cmakeTargets.build",
+          "when": "false"
+        },
+        {
+          "command": "neocmakelsp.cmakeTargets.refreshEntry",
+          "when": "false"
+        },
+        {
+          "command": "neocmakelsp.runScriptDebugger",
+          "when": "config.neocmakelsp.debug"
+        },
+        {
+          "command": "neocmakelsp.runConfigureDebugger",
+          "when": "config.neocmakelsp.debug"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "neocmakelsp.cmakeTargets.refreshEntry",
+          "when": "view == neocmakelsp.cmakeTargets",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "neocmakelsp.cmakeTargets.build",
+          "when": "view == neocmakelsp.cmakeTargets",
+          "group": "inline"
+        },
+        {
+          "command": "neocmakelsp.cmakeTargets.run",
+          "when": "view == neocmakelsp.cmakeTargets && viewItem == executable",
+          "group": "inline"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "neocmakelsp.runScriptDebugger",
+          "when": "editorLangId == cmake && config.neocmakelsp.debug",
+          "group": "neocmakelsp"
+        }
+      ]
+    },
+    "breakpoints": [
+      {
+        "language": "cmake"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "neocmakelsp",
+        "label": "neocmakelsp: CMake",
+        "languages": [
+          "cmake"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "cmakeDebugType": {
+                "type": "string",
+                "enum": [
+                  "configure",
+                  "script"
+                ],
+                "default": "configure",
+                "description": "%debug.mode%"
+              },
+              "scriptPath": {
+                "type": "string",
+                "description": "%debug.script%"
+              },
+              "pipeName": {
+                "type": "string",
+                "description": "%debug.pipe%"
+              },
+              "cwd": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "description": "%debug.cwd%"
+              },
+              "buildDirectory": {
+                "type": "string",
+                "description": "%configuration.buildDirectory.description%"
+              },
+              "scriptArgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "%debug.args%"
+              },
+              "env": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "default": {},
+                "description": "%debug.env%"
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "neocmakelsp",
+            "request": "launch",
+            "name": "CMake configure",
+            "cmakeDebugType": "configure"
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "CMake script",
+            "body": {
+              "type": "neocmakelsp",
+              "request": "launch",
+              "name": "CMake script",
+              "cmakeDebugType": "script",
+              "scriptPath": "${file}"
+            }
+          }
+        ]
+      }
+    ]
   },
   "extensionKind": [
     "workspace"
@@ -143,5 +348,8 @@
     "virtualWorkspaces": {
       "supported": false
     }
-  }
+  },
+  "activationEvents": [
+    "onDebug:neocmakelsp"
+  ]
 }

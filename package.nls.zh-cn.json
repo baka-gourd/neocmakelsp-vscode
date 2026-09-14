@@ -8,5 +8,22 @@
   "configuration.trace.description": "记录 LSP 日志",
   "configuration.trace.off": "Off",
   "configuration.trace.messages": "Message",
-  "configuration.trace.verbose": "Verbose"
+  "configuration.trace.verbose": "Verbose",
+  "configuration.lsp_snippets.description": "启用语言服务器的补全片段。修改后重启服务器。",
+  "configuration.debug.description": "显示 CMake 调试命令。需要支持调试器的 CMake 3.27 或更新版本",
+  "configuration.buildDirectory.description": "CMake 构建目录，可为相对于工作区的路径或绝对路径。默认为 `build`",
+  "view.targets.title": "CMake 目标",
+  "view.targets.empty": "暂无目标。请先生成包含 CMake File API codemodel 数据的构建目录，然后刷新。需要 neocmakelsp 支持 `neocmake/cmake_targets`",
+  "command.cmakeTargets.title": "neocmakelsp: 刷新 CMake 目标",
+  "command.cmakeTargets.refreshEntry.title": "刷新",
+  "command.cmakeTargets.build.title": "构建目标",
+  "command.cmakeTargets.run.title": "运行目标",
+  "command.runScriptDebugger.title": "neocmakelsp: 调试当前 CMake 脚本",
+  "command.runConfigureDebugger.title": "neocmakelsp: 调试 CMake 配置过程",
+  "debug.mode": "调试配置过程或脚本",
+  "debug.script": "CMake 脚本路径",
+  "debug.pipe": "可选的调试器命名管道或 Unix socket 路径",
+  "debug.cwd": "工作/源码目录",
+  "debug.args": "附加 CMake 命令行参数",
+  "debug.env": "传递给 CMake 的附加环境变量"
 }
