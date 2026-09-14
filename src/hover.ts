@@ -96,7 +96,7 @@ export function createHoverMiddleware(
             if (failures.size >= 16) failures.clear();
             failures.set(commandKey, Date.now());
             output.warn(
-              `Optional hover conversion unavailable in ${command[0]}; using original documentation. Install python/requirements.txt in the selected Python environment. Retrying after 30 seconds. ${String(error)}`,
+              `Optional hover conversion failed in ${command[0]}; using original documentation. Retrying after 30 seconds. Check the error below; install python/requirements.txt only if dependencies are missing. ${String(error)}`,
             );
           }
         } finally {

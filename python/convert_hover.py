@@ -10,6 +10,21 @@ import tempfile
 def convert(text):
     from sphinx.application import Sphinx
     from markdownify import markdownify
+    from cmake import CMakeSignatureObject
+    from docutils.statemachine import StringList
+
+    class HoverSignature(CMakeSignatureObject):
+        def run(self):
+            # CMake's CLI help can leave option fields indented relative to the
+            # first argument of a multiline signature. Let Docutils parse those
+            # fields again instead of treating ':target:' as another signature.
+            options, arguments = self.state.parse_directive_options(
+                self.options, self.option_spec,
+                StringList([line.lstrip() for line in self.arguments[0].splitlines()]),
+            )
+            self.options = options
+            self.arguments = ["\n".join(arguments)]
+            return super().run()
 
     with tempfile.TemporaryDirectory(prefix="neocmakelsp-hover-") as directory:
         root = Path(directory)
@@ -28,6 +43,11 @@ def convert(text):
                 }, status=None, warning=messages, freshenv=True,
             )
             app.env.settings.update(file_insertion_enabled=False, raw_enabled=False)
+            app.add_directive_to_domain("cmake", "signature", HoverSignature, override=True)
+            # Sphinx has already instantiated the environment's domains.
+            app.env.get_domain("cmake").directives = {
+                **app.env.get_domain("cmake").directives, "signature": HoverSignature,
+            }
             app.build(force_all=True)
         body = json.loads((root / "out/index.fjson").read_text(encoding="utf-8"))["body"]
         # VS Code uses CommonMark, not Markdown Extra definition lists.
