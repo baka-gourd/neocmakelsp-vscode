@@ -1,0 +1,5 @@
+allowBuilds:
+  "@vscode/vsce-sign": true
+  esbuild: true
+  keytar: true
+# esbuild uses its platform package; local VSIX packaging needs no signing/keychain helpers.

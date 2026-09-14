@@ -1,0 +1,12 @@
+{
+  "configuration.hover.sphinx.description": "使用 Python Environments 为 RST 文档提供转换。该环境需有 Sphinx 和 markdownify，不可用时显示原始文本。",
+  "configuration.diagnostics.ignoredCodes.description": "要抑制的诊断代码，例如 `C0301`。",
+  "extension.description": "使用 neocmakelsp 为 CMake 提供 LSP 支持",
+  "workspaceTrust.description": "neocmakelsp 会运行本机可执行文件并读取项目配置",
+  "command.restart.title": "neocmakelsp: 重启语言服务器",
+  "configuration.path.description": "neocmakelsp 可执行文件的路径。默认为 `neocmakelsp`。",
+  "configuration.trace.description": "记录 LSP 日志",
+  "configuration.trace.off": "Off",
+  "configuration.trace.messages": "Message",
+  "configuration.trace.verbose": "Verbose"
+}

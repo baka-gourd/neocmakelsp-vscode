@@ -1,29 +1,147 @@
 {
-  "name": "neocmakelsp-vscode",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "neocmakelsp-vscode-nptr",
+  "displayName": "neocmakelsp for VS Code",
+  "version": "0.1.0",
+  "description": "%extension.description%",
+  "categories": [
+    "Formatters",
+    "Linters",
+    "Programming Languages"
+  ],
   "keywords": [],
+  "license": "MPL-2.0",
   "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "12.4.1",
-      "onFail": "download"
-    }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baka-gourd/neocmakelsp-vscode.git"
   },
-  "packageManager": "pnpm@12.4.1",
+  "publisher": "nullpinter",
   "type": "module",
+  "main": "./dist/extension.cjs",
+  "scripts": {
+    "test:python-env": "esbuild src/python-environment.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/python-environment-test.cjs && node test/python-environment.test.cjs",
+    "test:logs": "esbuild src/server-log.ts --bundle --platform=node --format=esm --outfile=dist/server-log-test.mjs && node test/server-log.test.mjs",
+    "test:server": "node test/server-smoke.mjs",
+    "check": "tsc --noEmit",
+    "build": "pnpm check && esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.cjs",
+    "vscode:prepublish": "pnpm build",
+    "package": "vsce package --no-dependencies"
+  },
   "dependencies": {
     "vscode-languageclient": "^10.1.1"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.2",
     "@types/node": "^26.5.1",
-    "@types/vscode": "^1.137.0",
+    "@types/vscode": "^1.106.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "typescript": "^7.0.2"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "cmake",
+        "aliases": [
+          "CMake",
+          "cmake"
+        ],
+        "extensions": [
+          ".cmake"
+        ],
+        "filenames": [
+          "CMakeLists.txt"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[cmake]": {
+        "editor.semanticHighlighting.enabled": true
+      }
+    },
+    "grammars": [
+      {
+        "language": "cmake",
+        "scopeName": "source.cmake",
+        "path": "./syntaxes/cmake.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "neocmakelsp.restart",
+        "title": "%command.restart.title%"
+      }
+    ],
+    "configuration": {
+      "title": "neocmakelsp",
+      "properties": {
+        "neocmakelsp.hover.sphinx": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%configuration.hover.sphinx.description%"
+        },
+        "neocmakelsp.diagnostics.ignoredCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "default": [],
+          "uniqueItems": true,
+          "scope": "resource",
+          "markdownDescription": "%configuration.diagnostics.ignoredCodes.description%"
+        },
+        "neocmakelsp.path": {
+          "type": "string",
+          "default": "neocmakelsp",
+          "scope": "machine-overridable",
+          "minLength": 1,
+          "markdownDescription": "%configuration.path.description%"
+        },
+        "neocmakelsp.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "%configuration.trace.description%",
+          "enumDescriptions": [
+            "%configuration.trace.off%",
+            "%configuration.trace.messages%",
+            "%configuration.trace.verbose%"
+          ]
+        }
+      }
+    }
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.4.1",
+      "onFail": "warn"
+    }
+  },
+  "engines": {
+    "vscode": "^1.106.0"
+  },
+  "packageManager": "pnpm@12.4.1",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "%workspaceTrust.description%"
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
   }
 }

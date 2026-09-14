@@ -1,0 +1,14 @@
+**/*
+!package.json
+!package.nls*.json
+!language-configuration.json
+!syntaxes/
+!syntaxes/*.json
+!README.md
+!LICENSE
+!dist/extension.cjs
+!python/convert_hover.py
+!python/requirements.txt
+!python/vendor/cmake.py
+!python/vendor/LICENSE.rst
+!python/vendor/README.md

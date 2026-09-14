@@ -3,3 +3,6 @@ out/
 dist/
 *.vsix
 .DS_Store
+.pixi/
+.venv/
+__pycache__/

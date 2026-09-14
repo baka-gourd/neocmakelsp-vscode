@@ -1,0 +1,12 @@
+{
+  "configuration.hover.sphinx.description": "Convert RST documentation using Python Environments. Requires Sphinx and markdownify in that environment; displays the original text when unavailable.",
+  "configuration.diagnostics.ignoredCodes.description": "Diagnostic codes to suppress, for example `C0301`.",
+  "extension.description": "LSP support for CMake using neocmakelsp",
+  "workspaceTrust.description": "neocmakelsp runs a local executable and reads project configuration",
+  "command.restart.title": "neocmakelsp: Restart Language Server",
+  "configuration.path.description": "Path to the neocmakelsp executable. Defaults to `neocmakelsp`.",
+  "configuration.trace.description": "Record LSP logs",
+  "configuration.trace.off": "Off",
+  "configuration.trace.messages": "Message",
+  "configuration.trace.verbose": "Verbose"
+}

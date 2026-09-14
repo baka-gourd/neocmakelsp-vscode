@@ -1,0 +1,8 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "cmake.sourceDirectory": "D:/repo/neocmakelsp-vscode/__cmake_systeminformation",
+  "python.terminal.activateEnvironment": false,
+  "python-envs.terminal.autoActivationType": "off"
+}
